@@ -1,0 +1,45 @@
+'''2025jun4we@e77 MeLinhWater tnhan@enersev
+Dim arPMs:arPMs=Array(_
+"STATION_CURRENT_PUMP1","STATION_HZ_PUMP1","STATION_SPEED_PUMP1","TIME_RUN_PUMP1",_
+"STATION_CURRENT_PUMP2","STATION_HZ_PUMP2","STATION_SPEED_PUMP2","TIME_RUN_PUMP2",_
+"STATION_CURRENT_PUMP3","STATION_HZ_PUMP3","STATION_SPEED_PUMP3","TIME_RUN_PUMP3",_
+"STATION_CURRENT_PUMP4","STATION_HZ_PUMP4","STATION_SPEED_PUMP4","TIME_RUN_PUMP4",_
+"MASTER_TOTAL_ROUGH_WATER","MASTER_FLOW_NUOC_THO","MASTER_DUC_NUOC_THO","DO","MASTER_PH","MASTER_CLO_DU1","((CloAnalys1))","MASTER_DO_TRONG_NUOC_SACH",_
+"CHEMICAL_ACTUAL_CURRENT_PAC1","CHEMICAL_ACTUAL_HZ_PAC1","CHEMICAL_ACTUAL_SPEED_PAC1","TIME_RUN_PAC1",_
+"CHEMICAL_ACTUAL_CURRENT_PAC2","CHEMICAL_ACTUAL_HZ_PAC2","CHEMICAL_ACTUAL_SPEED_PAC2","TIME_RUN_PAC2","TOTAL_LL_PAC","FEB_LUU_LUONG_PAC",_
+"CHEMICAL_ACTUAL_CURRENT_POL1","CHEMICAL_HZ_POL1","CHEMICAL_ACTUAL_SPEED_POL1","TIME_RUN_POL1",_
+"CHEMICAL_ACTUAL_CURRENT_POL2","CHEMICAL_HZ_POL2","CHEMICAL_ACTUAL_SPEED_POL2","TIME_RUN_POL2","TONG_LL_KMNO4","CHEMICAL_SQL_LUU_LUONG_KMNO4",_
+"CHEMICAL_ACTUAL_CURRENT_JAVEN1","CHEMICAL_ACTUAL_HZ_JAVEN1","CHEMICAL_ACTUAL_SPEED_JAVEN1","TIME_RUN_JAVEN1",_
+"CHEMICAL_ACTUAL_CURRENT_JAVEN2","CHEMICAL_ACTUAL_HZ_JAVEN2","CHEMICAL_ACTUAL_SPEED_JAVEN2","TIME_RUN_JAVEN2",_
+"TOTAL_LL_JAVEN","FEB_LUU_LUONG_JAVEN",_
+"STATION2_CURRENT_PUMP1","STATION2_HZ_PUMP1","STATION2_SPEED_PUMP1","PUMP1_RUN",_
+"STATION2_CURRENT_PUMP2","STATION2_HZ_PUMP2","STATION2_SPEED_PUMP2","PUMP2_RUN",_
+"STATION2_CURRENT_PUMP3","STATION2_HZ_PUMP3","STATION2_SPEED_PUMP3","PUMP3_RUN",_
+"STATION2_CURRENT_PUMP4","STATION2_HZ_PUMP4","STATION2_SPEED_PUMP4","PUMP4_RUN",_
+"STATION2_CURRENT_PUMP5","STATION2_HZ_PUMP5","STATION2_SPEED_PUMP5","PUMP5_RUN",_
+"DATA_TOTAL_CLEAN_WATER","DATA_FLOW_CLEAN_WATER","DATA_PRESSURE_TOTAL","DATA_LEVEL_CLEAR_WATER","DATA_CLO_DU2","((CloAnalys2))",_
+"TA_CURRENT_PUMP1","TA_HZ_PUMP1","TA_SPEED_PUMP1","TIME_PUMP1_RUN",_
+"TA_CURRENT_PUMP2","TA_HZ_PUMP2","TA_SPEED_PUMP2","TIME_PUMP2_RUN",_
+"TA_CURRENT_PUMP3","TA_HZ_PUMP3","TA_SPEED_PUMP3","TIME_PUMP3_RUN",_ 
+"TA_CURRENT_PUMP4","TA_HZ_PUMP4","TA_SPEED_PUMP4","TIME_PUMP4_RUN",_
+"TA_CURRENT_PUMP5","TA_HZ_PUMP5","TA_SPEED_PUMP5","TIME_PUMP5_RUN",_
+"LUU_LUONG_TONG","LUU_LUONG_TUC_THOI","AP_LUC_DAU_VAO","AP_LUC_DAU_RA","MUC_NUOC_BE","MUC_NUOC_BE_2","CLO_DU1")
+Dim ts,t,ds,d:d=Date():ds=Year(d):t=Time()
+	  i=Month(d) :If(Len(i)=1)Then:ds=ds&"0"&i:Else:ds=ds&i:End If
+	  i=Day(d)   :If(Len(i)=1)Then:ds=ds&"0"&i:Else:ds=ds&i:End If
+Dim i:i=Hour(t)  :If(Len(i)=1)Then:ts=   "0"&i:Else:ts=   i:End If
+	  i=Minute(t):If(Len(i)=1)Then:ts=ts&"0"&i:Else:ts=ts&i:End If
+	  i=Second(t):If(Len(i)=1)Then:ts=ts&"0"&i:Else:ts=ts&i:End If
+Dim pn,ws:Set ws=CreateObject("WScript.Shell"):pn="C:/Users/"&ws.ExpandEnvironmentStrings("%USERNAME%")&"/OneDrive/MLwLogs/"
+Dim fnLogData,fnRtData1:fnRtData1=pn&"MLwRtData1.csv":fnLogData=pn&"MLwLog"&ds&".csv"  
+Dim p,ps,vs,n:n=ubound(arPMs):ps="DateTime":vs=ds&"_"&ts
+for i=0 to n:p=arPMs(i):ps=ps&","&p
+    if InStr(p,"((")=0 then	'if (i mod 2)=0 then vs=vs&","&(i+1):else:vs=vs&",--":end if
+		set t=HMIRuntime.Tags(p):t.Read:if t.LastError=0 then vs=vs&","&t.Value:else:vs=vs&",--":end if
+	else vs=vs&",--":end if:next 
+Dim tf,fs:Set fs=createObject("Scripting.FileSystemObject"):
+Set tf=fs.createTextFile(fnRtData1,True):tf.write ps&vbcrlf&vs:tf.close 
+If  fs.FileExists(fnLogData) Then
+		Set tf=fs.openTextFile  (fnLogData,8,True)
+Else:	Set tf=fs.createTextFile(fnLogData):tf.writeLine(ps):End If
+tf.writeLine(vs):tf.close: 'WScript.Echo pn'"Len="&(n+1)&vbcrlf&s 'MsgBox 

@@ -1,0 +1,56 @@
+<!--MLw25svg.htm 2025jun8 tnhan@enersev https://w3schools.com/graphics/svg_scripting.asp ,initial-scale=1.0-->
+<!doctype html><html><head><meta charset='utf-8'><!--meta name="viewport" content="width=device-width"-->
+<style>body{background:lightgray;font-family:arial;margin:5px 5px 5px 5px;overflow:hidden;}</style></head>
+<body oncontextmenu='return false;' onload='ini1();'><!--b style='font-size:1.5em'>MÊ LINH water</b>  2025(c) <b>Enersev</b><br-->
+<!--div id=divG style='text-align:center;margin:0 0 0 0;padding:0 0 0 0;width:1440px;height:500px;'-->
+<svg id=svg1 viewBox='0 0 1440 520' style='border:2px solid gray;width:1440px;height:520px;'>
+        <text id='txDate' x=500 y=515 fill=black font-size=1em style='font-weight:bold;' onclick='enterDate();'>Mê Linh water (date)</text></svg>
+<script src='psGra.js'></script>
+<script>var w3svg='http://www.w3.org/2000/svg',psPolyL=[],txPolyL=[],txPMs=[],sgYmax=400;
+function ys2dmy(ys){return ys.substring(6,8)+'-'+ys.substring(4,6)+'-'+ys.substring(0,4);}
+function tim2minu(s){return parseInt(s.substring(9,11))*60+parseInt(s.substring(11,13));}//console.log('minu='+n);
+function sgLineNew(sg,x1,y1,x2,y2,c,w){ var l=document.createElementNS(w3svg,"line");l.setAttribute('stroke',c);l.setAttribute('stroke-width',w);
+    l.setAttribute('x1',x1);    l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);sg.appendChild(l);return l;}
+function sgTextNew(sg,x,y,c,fw,v){var t=document.createElementNS(w3svg,"text");t.setAttribute('font-weight',fw);
+    t.setAttribute("x",x);t.setAttribute("y",y);t.setAttribute("fill",c);t.textContent=v;t.style.cursor='pointer';sg.appendChild(t);return t;}
+function sgTimeLine_ini(id,hgs,vgs){//,vb=svg.getAttribute('viewBox')
+    var i,svg=document.getElementById(id),vb=svg.viewBox.baseVal,w=vb.width,h=500;//vb.height;//sgYmax=h;//console.log(w+' '+h);
+    for(i=1;i<hgs;i++){sgLineNew(svg,0,i*h/hgs,w,i*h/hgs,'silver',1);}
+    for(i=1;i<vgs;i++){sgLineNew(svg,i*w/vgs,0,i*w/vgs,400,'silver',1);sgTextNew(svg,i*w/vgs-10,h-80,'black','normal',i*24/vgs+'h');}
+    sgTextNew(svg,0,h-80,'black','normal','0');sgTextNew(svg,1430,h-80,'black','normal','0');} 
+function svPolyLine(sg,ti,pts,c,w,das){var p=document.createElementNS(w3svg,"polyline");p.setAttribute('stroke-dasharray',das);
+    p.setAttribute('points',pts);p.setAttribute('stroke',c);p.setAttribute('stroke-width',w);p.setAttribute('fill','none');sg.appendChild(p);
+    var t=document.createElementNS(w3svg,'title');t.textContent=ti;p.appendChild(t);return p;}
+function rPMpts(pm,ti,k,jnRs,c,w,das){var i,jnR,n=jnRs.length,pts='';
+    for(i=0;i<n-1;i++){jnR=jnRs[i];pts+=tim2minu(jnR['DateTime'])+','+(sgYmax-jnR[pm]*k)+' ';}//i
+    var pl=svPolyLine(document.getElementById('svg1'),ti,pts,c,w,das); return pl;}
+function ys2s(ys){var y=ys.substring(0,4), mo=ys.substring(4,6), d=ys.substring(6,8), h,mi,se;
+    h=ys.substring(9,11);mi=ys.substring(11,13);se=ys.substring(13,15);return d+'-'+mo+'-'+y +'  '+h+':'+mi+':'+se;}//20250604_123456
+function jn2Lines(jsn){var ss="",k;for(k in jsn)ss+=k+':'+jsn[k]+'\n';return ss;}
+function csv2jn(csv){var i,j,s,hs,res=[],Ls=csv.split("\n");s=Ls[0];s=s.substring(0,s.length-1);hs=s.split(",");
+    for(i=1;i<Ls.length;i++){var o={};s=Ls[i].split(",");for(j=0;j<hs.length;j++){o[hs[j]]=s[j];} res.push(o);} return res;}    
+var ini1done=0,fnCSV='',jnRecs=0,nRecs=0;//,jnRec1=0;//json
+function rCSVs(){var jnR,fn=fnCSV;//'MLwLog'+today2ys()+'.csv';if(fnCSV!=fn)window.location.reload(true);//{fnCSV=fn;ini1done=0;}
+    fetch(fn,{headers:{'Access-Control-Allow-Origin':'*','Cache-Control':'no-store','Pragma':'no-cache'}})
+    .then(response=>response.text()).then(csv=>{ var i,sg=document.getElementById('svg1');//console.log(ini1done);
+        jnRecs=csv2jn(csv);var i,nn=jnRecs.length-2;if(nn<3)return;
+        jnR=jnRecs[0];document.getElementById('txDate').textContent='Mê Linh water '+ys2dmy(jnR['DateTime']);//sgTextNew(sg,0,20,'black','normal',jnR['DateTime'].substring(0,8));
+    var ps=psName, ti=psTit, cs=psColor, ks=psKs, das=psDas, xs=psXs,ys=psYs,wi=psWi;
+    console.log(jnRecs[nn]['DateTime']+' ini1done='+ini1done+' nRecs='+nn);
+    for(i=0;i<ps.length;i++){psPolyL[i]=rPMpts(ps[i],ti[i],ks[i],jnRecs,cs[i],wi[i],das[i]); 
+                             txPolyL[i]=sgTextNew(sg,xs[i],ys[i],cs[i],'normal',ti[i]);txPolyL[i].setAttribute('onclick','onclickTxPolyL('+i+')');}
+    nRecs=nn;}).catch(e=>{console.error('ERRfetchCSVfile:',e);});}
+function onclickTxPolyL(i){console.log('txPoly'+i);
+    if(  psPolyL[i].getAttribute('visibility')!='hidden'){txPolyL[i].setAttribute('fill','gray');psPolyL[i].setAttribute('visibility','hidden');}
+    else{psPolyL[i].setAttribute('visibility', 'visible');txPolyL[i].setAttribute('fill',psColor[i]);}}
+function today2ys(){var s,m,e,d=new Date();s=d.getFullYear();console.log(d+'..svg..');
+    m=d.getMonth()+1;if(m<10)s+='0'+m;else s+=''+m;e=d.getDate();if(e<10)s+='0'+e;else s+=''+e;return s;}//var iFrameTrue=0;
+function ini1(){sgTimeLine_ini('svg1',5,24);return;}
+    //if(document.referrer!=='')iFrameTrue=1;console.log('iFrameTrue'+iFrameTrue);if(iFrameTrue<1)return;
+    //fnCSV='MLwLog'+today2ys()+'.csv';rCSVs();setInterval(rCSVs,60000);}//function(){window.location.reload();}
+function sgPolyLclr(){var n=psPolyL.length;if(n<1)return;var i,sg=document.getElementById('svg1');for(i=0;i<n;i++)sg.removeChild(psPolyL[i]);}
+function sgtxPMsClr(){var n=txPMs.length;  if(n<1)return;var i,sg=document.getElementById('svg1');for(i=0;i<n;i++)sg.removeChild(txPMs[i]);}
+function enterDate(){var fn,s,n,i,dmy=prompt('d-m-yyyy');if(dmy!=null){s=dmy.split(/[-/]/);n=s.length;if(n<3)return;
+    fn='MLwLog';fn+=s[2];if(s[1].length<2)fn+='0';fn+=s[1];if(s[0].length<2)fn+='0';fn+=s[0];fn+='.csv';
+    if(confirm(fn)){sgPolyLclr();sgtxPMsClr();fnCSV=fn;rCSVs();}}}
+</script></body></html>
