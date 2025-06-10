@@ -1,0 +1,75 @@
+<!--MLw25rtRec1.htm 2025jun9mo tnhan@enersev  ,initial-scale=1.0"-->
+<!doctype html><html><head><meta charset='utf-8'><!--meta name="viewport" content="width=device-width"-->
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" /><meta http-equiv="Expires" content="-1" />
+<style>body{background:lightgray;font-family:arial;margin:9px 0px 0px 0px;overflow:hidden;}
+div{margin:2px 2px 2px 2px;padding:2px 2px 2px 2px;}</style></head>
+<body oncontextmenu='return false;' onload='rCSVfile();ini1();'><center><div style='width:100%;'><b style='font-size:1.5em'>MÊ LINH water</b> (...under constructions...) 2025(c) <b>Enersev</b><br></div>
+<div style='width:100%;height:90%;display:flex;'>
+<div style='height:99%;width:240px;border:1px solid gray;'><b>Trạm Bơm Nước Sông</b><br><!--div id="divSumRWater"></div--><br>
+<div id='dvRWduc'>--</div><br>
+<div id="divRPum1">Pump1</div><br><div id="divRPum2">Pump2</div><br><div id="divRPum3">Pump3</div><br><div id="divRPum4">Pump4</div></div>
+<div style="text-align:center;border:1px solid gray;position:absolute;top:150px;left:950px;width:290px;height:240px;"><b>Trạm Bơm Nước Sạch</b><br><!--div id="divSumCWater"></div-->
+    <div id="divCPum1">Pump1</div><div id="divCPum2">Pump2</div><div id="divCPum3">Pump3</div><div id="divCPum4">Pump4</div><div id="divCPum5">Pump5</div></div>
+<!--textarea id="ta1"></textarea--></div><!--button onclick="rCSVfile()">rCSV</button--></center>
+<div id='divCWater1' style='text-align:center;border:1px solid gray;position:absolute;top:40px;left:950px; width:140px;height:100px;background:linear-gradient(to bottom,lightgray 90%,cyan 10%);'></div>
+<div id='divCWater2' style='text-align:center;border:1px solid gray;position:absolute;top:40px;left:1100px;width:140px;height:100px;background:linear-gradient(to bottom,lightgray 90%,cyan 10%);'></div>
+<div id='divRWflow'  style='text-align:center;border:1px solid gray;position:absolute;top:400px;left:4px;  width:240px;height:18px; background:linear-gradient(to left  ,lightgray 90%,limegreen 10%);'></div>
+<div id='divCWflow'  style='text-align:center;border:1px solid gray;position:absolute;top:400px;left:950px;width:290px;height:18px;background:linear-gradient(to left  ,lightgray 90%,cyan 10%);'></div>
+<div id='divCWpress' style='text-align:center;border:1px solid gray;position:absolute;top:430px;left:950px;width:290px;height:18px;background:linear-gradient(to left  ,lightgray 90%,cyan 10%);'></div>
+<div id='divTAipres' style='text-align:center;border:1px solid gray;position:absolute;top:400px;left:1260px;width:180px;height:18px;background:linear-gradient(to left  ,lightgray 90%,cyan 10%);'></div>
+<div id='divTAopres' style='text-align:center;border:1px solid gray;position:absolute;top:430px;left:1260px;width:180px;height:18px;background:linear-gradient(to left  ,lightgray 90%,cyan 10%);'></div>
+<div style="text-align:center;border:1px solid gray;position:absolute;top:40px;left:1260px;width:180px;height:350px;"><b>Trạm Bơm Tăng Áp</b><br><br>
+<div id="divPuTa1">Pump1</div><div id="divPuTa2">Pump2</div><div id="divPuTa3">Pump3</div><div id="divPuTa4">Pump4</div><div id="divPuTa5">Pump5</div></div>
+<div id='dvCWduc' style='position:absolute;top:100px;left:1030px;width:120px;height:20px;'>--</div>
+<div id='dvPH'    style='position:absolute;top:120px;left:1000px;width:60px; height:20px;'>pH</div>
+<div id='dvDO'    style='position:absolute;top:120px;left:1120px;width:99px; height:20px;'>DO</div>    
+<div id=divDT style='position:absolute;top:0px;right:0px;font-weight:bold;' onclick="rCSVfile()">dd-mo-yyyy hh:mi:ss</div>
+<iframe src='test1.htm' height=540 width=1460 frameborder=0 style='position:absolute;top:460px;left:5px;margin:0 0 0 0;padding:0 0 0 0;'></iframe></body>
+<script>var jsnData1,jsnRec1;//,sCurDir="C:/th66/ens/MeLinhWater/MLwLogs/";
+function csv2jsn(csv){var i,j,s,hs,res=[],Ls=csv.split("\n");s=Ls[0];s=s.substring(0,s.length-1);hs=s.split(",");
+    for(i=1;i<Ls.length;i++){var o={};s=Ls[i].split(",");for(j=0;j<hs.length;j++){o[hs[j]]=s[j];}
+    res.push(o);} return res;}//JSON.stringify(res);}console.log(jsonData1); function isNum(v){return typeof v==='number';}
+function n2s(n,f){if(isNaN(n))return '--';return n.toFixed(f);}
+function cwaterView(id,v){var s,o=document.getElementById('divCWater'+id),p=Math.round(v*20);
+    s='linear-gradient(to bottom,lightgray '+(100-p)+'%,SkyBlue '+p+'%)';o.style.backgroundImage=s;
+    v=Number(v);o.innerHTML='<b>Nước Sạch Bể '+id+'<br>'+v.toFixed(2)+'m</b><br>'+(v*400).toFixed(0)+'m3';}
+function rpumView(id,jsn,dv){var ps=["STATION_CURRENT_PUMP","STATION_HZ_PUMP","STATION_SPEED_PUMP","TIME_RUN_PUMP"];
+    var d,i,s='<u>Pump'+id+'</u><br>',p,v=[0,0,0,0],un=["A","Hz","vp","hr(RT)"];
+    for(i=0;i<ps.length;i++){v[i]=Number(jsn[ps[i]+id]);s+=n2s(v[i],0)+un[i]+'  ';}
+    d=document.getElementById(dv);d.innerHTML=s;if(v[0]<2)d.style.background='lightgray';else d.style.background='LimeGreen';}
+function taPuView(id,jsn,dv){var ps=["TA_CURRENT_PUMP","TA_HZ_PUMP","TA_SPEED_PUMP","TIME_PUMP"];
+    var d,i,s='<u>Pump'+id+'</u><br>',p,v=[0,0,0,0],un=["A","Hz","vp<br>","hr(RT)"];
+    for(i=0;i<ps.length;i++){if(i<3)v[i]=Number(jsn[ps[i]+id]);else v[i]=Number(jsn[ps[i]+id+'_RUN']);s+=n2s(v[i],0)+un[i]+'   ';}
+    d=document.getElementById(dv);d.innerHTML=s;if(v[0]<2)d.style.background='lightgray';else d.style.background='SkyBlue';}
+function cpumView(id,jsn,dv){var ps=["STATION2_CURRENT_PUMP","STATION2_HZ_PUMP","STATION2_SPEED_PUMP",'PUMP'];
+    var d,i,s='<u>Pump'+id+'</u><br>',p,v=[0,0,0,0],un=["A","Hz","vp","hr(RT)"];
+    for(i=0;i<ps.length;i++){if(i<3)v[i]=Number(jsn[ps[i]+id]);else v[i]=Number(jsn[ps[i]+id+'_RUN']);s+=n2s(v[i],0)+un[i]+'   ';}
+    d=document.getElementById(dv);d.innerHTML=s;if(v[0]<2)d.style.background='lightgray';else d.style.background='SkyBlue';}  
+function hbarView(dv,v,n,u,f,max,c){var s,o=document.getElementById(dv),p=Math.round(v*100/max);
+    s='linear-gradient(to left,lightgray '+(100-p)+'%,'+c+' '+p+'%)';o.style.backgroundImage=s;o.innerHTML=n+' '+Number(v).toFixed(f)+u;}//.substring(0,5)
+function ys2s(ys){var y=ys.substring(0,4), mo=ys.substring(4,6), d=ys.substring(6,8), h,mi,se;
+    h=ys.substring(9,11);mi=ys.substring(11,13);se=ys.substring(13,15);return d+'-'+mo+'-'+y +'  '+h+':'+mi+':'+se;}//20250604_123456
+function jsn2Lines(jsn){var ss="",k;for(k in jsn)ss+=k+':'+jsn[k]+'\n';return ss;}
+function rCSVfile(){fetch('MLwRtData1.csv',{headers:{'Access-Control-Allow-Origin':'*','Cache-Control':'no-store','Pragma':'no-cache'}}).then(response=>response.text()).then(csv=>{
+        jsnData1=csv2jsn(csv);jsnRec1=jsnData1[0];console.log(jsn2Lines(jsnRec1));  var v,i;
+        document.getElementById('divDT').innerHTML=ys2s(jsnRec1['DateTime']);
+        for(i=1;i<5;i++)rpumView(i,jsnRec1,'divRPum'+i);
+        for(i=1;i<6;i++)cpumView(i,jsnRec1,'divCPum'+i);
+        for(i=1;i<6;i++)taPuView(i,jsnRec1,'divPuTa'+i);
+        v=jsnRec1['MUC_NUOC_BE'];cwaterView(1,v);v=jsnRec1['MUC_NUOC_BE_2'];cwaterView(2,v); 
+        v=jsnRec1['DATA_PRESSURE_TOTAL'];   hbarView('divCWpress',v,'Áp suất'       ,'bar' ,1,10  ,'SkyBlue');
+        v=jsnRec1['AP_LUC_DAU_VAO'];        hbarView('divTAipres',v,'ÁpSuất TA vào' ,'bar' ,1,10  ,'SkyBlue');
+        v=jsnRec1['AP_LUC_DAU_RA'];         hbarView('divTAopres',v,'ÁpSuất TA  ra ','bar' ,1,10  ,'SkyBlue');
+        v=jsnRec1['DATA_FLOW_CLEAN_WATER']; hbarView('divCWflow' ,v,'Lưu Lượng','m3h',0,1000,'SkyBlue');
+        v=jsnRec1['MASTER_FLOW_NUOC_THO'];  hbarView('divRWflow' ,v,'Lưu Lượng','m3h',0,1000,'limegreen');
+        document.getElementById('dvRWduc').innerHTML='Độ Đục <b>'+Number(jsnRec1['MASTER_DUC_NUOC_THO']).toFixed(2)+'</b>ntu';
+        document.getElementById('dvCWduc').innerHTML='Độ Đục <b>'+Number(jsnRec1['MASTER_DO_TRONG_NUOC_SACH']).toFixed(2)+'</b>ntu';
+        document.getElementById('dvPH').innerHTML='pH=' +Number(jsnRec1['MASTER_PH']).toFixed(2);
+        document.getElementById('dvDO').innerHTML='oxy='+Number(jsnRec1['DO']).toFixed(2)+'mgL';
+        //document.getElementById('divSumRWater').innerHTML='<b>Lưu Lượng Tổng<br>'+jsnRec1['LUU_LUONG_TONG']+' m3</b>'
+        //document.getElementById('divSumCWater').innerHTML='<b>Lưu Lượng Tổng<br>'+jsnRec1['DATA_TOTAL_CLEAN_WATER']+' m3</b>';
+    }).catch(e=>{console.error('ERRfetchCSVfile:',e);});}
+function ini1(){setInterval(rCSVfile,30000);}
+</script></html>
